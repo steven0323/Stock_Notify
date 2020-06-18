@@ -4,6 +4,7 @@
 Created on Tue Jun 16 11:38:31 2020
 @author: steven_tseng
 @Project: Line official account notify 
+@Last modify : 2020 / 06 / 18
 
 """
 import requests
@@ -17,10 +18,11 @@ from os import path
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
+from newsapi import NewsApiClient
 import datetime
 import schedule
-
-
+import News
+from googletrans import Translator
 
 
 
@@ -28,7 +30,7 @@ token = "oFBZPCLhiIjdHhiLfniyJWtoknaBfSs52aVu2C0OF6S"
 headers = {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'}
 options = Options()
 options.add_argument("user-data-dir={0}")
-
+translator = Translator()
 
 
 def morning_greeting():
@@ -100,7 +102,7 @@ def us_stock():
     dow_change = soup.find("li",class_="tickerDow").find("span",class_="posChange").string
     dow_percent = soup.find("li",class_="tickerDow").find("span",class_="posChangePct").string
     dow_message="道瓊指數: "+ dow+" 漲跌: "+dow_change+" 漲跌百分比: "+dow_percent
-    lineNotifyMessage(token,dow_message)
+    #lineNotifyMessage(token,dow_message)
     
     
     if float(dow_change[1:]) >= 500:
@@ -122,14 +124,14 @@ def us_stock():
     nas_percent = soup.find("li",class_="tickerNasdaq").find("span",class_="posChangePct").string
     
     nas_message="納斯達克指數: "+nas+" 漲跌: "+nas_change+" 漲跌百分比: "+nas_percent
-    lineNotifyMessage(token,nas_message)
+    #lineNotifyMessage(token,nas_message)
 
     sp = soup.find("li",class_="tickerS&P").find("span",class_="posLast").string
     sp_change = soup.find("li",class_="tickerS&P").find("span",class_="posChange").string
     sp_percent = soup.find("li",class_="tickerS&P").find("span",class_="posChangePct").string
     
     sp_message="標普500 指數: "+sp+" 漲跌: "+sp_change+" 漲跌百分比: "+sp_percent
-    lineNotifyMessage(token,sp_message)
+    #lineNotifyMessage(token,sp_message)
     time.sleep(600)
     
     if hr =="04":
@@ -143,6 +145,7 @@ def us_stock():
 
 def tw_stock():
     
+    browser = webdriver.Chrome(executable_path="./chromedriver")
     x = datetime.datetime.now() 
     hr = x.strftime("%H")
     mini = x.strftime("%M")
@@ -204,24 +207,38 @@ def tw_stock():
         pass
     else:
         tw_stock()
+    browser.quit()
+  
+def get_news():
+    
+    titles = News.main()
+    for title in titles:
+        print(title)
+        title = translator.translate(title,dest='zh-tw').text
+        #msg = "美國即時新聞\r\n"+title
+        #lineNotifyMessage(token,msg)
+        time.sleep(1.5)
         
+          
 
 '''
     scheduling process in the script
+    #schedule.every().day.at("08:00").do(morning_greeting)
+    #schedule.every().day.at("08:10").do(close_info)
+    schedule.every().day.at("10:48").do(tw_stock)
+    #schedule.every().day.at("00:04").do(us_stock)
+
 '''
 
-#schedule.every().day.at("08:00").do(morning_greeting)
-#schedule.every().day.at("08:10").do(close_info)
-schedule.every().day.at("10:48").do(tw_stock)
-#schedule.every().day.at("00:04").do(us_stock)
 
 if __name__=="__main__":
-    browser = webdriver.Chrome(executable_path="./chromedriver")
+    
     while True:
         x = datetime.datetime.now()
         day = x.strftime("%a")
         if day == "Mon" or day =="Tue" or day == "Wed" or day =="Thu" or day =="Fri" or day=="Sat":
-            schedule.run_pending()
+            get_news()
+            time.sleep(1800)
         else:
             pass
     

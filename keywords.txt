@@ -1,0 +1,10 @@
+Xi Jinping,5
+China,5
+Donald Trump,5
+Jeff Bezos,1
+North Korea,5
+Kim Jong-un,5
+Coronavirus,5
+Covid-19,5
+Recession,6
+War,6

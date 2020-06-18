@@ -1,0 +1,6 @@
+cnn
+nbc-news
+fox-news
+politico
+reuters
+the-verge

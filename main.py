@@ -213,7 +213,8 @@ def get_news():
     
     titles = News.main()
     for title in titles:
-        print(title)
+        print("US Top News: "+title)
+        print()
         title = translator.translate(title,dest='zh-tw').text
         #msg = "美國即時新聞\r\n"+title
         #lineNotifyMessage(token,msg)

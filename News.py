@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-    Real time News scrapping
-    Developer : Steven Tseng
-    Date : 2020 / 06 / 18
-"""
 import requests
 from newsapi import NewsApiClient
 import pandas as pd
@@ -15,6 +8,7 @@ from datetime import datetime
 import pytz
 import datetime
 import time
+from tqdm import tqdm
 
 
 keywords = []
@@ -36,6 +30,7 @@ def top_news():
     'category＝business&'
        'country=us&'
        'from={}&'
+       'sort_by=relevancy&'
        'apiKey=18bcaa50d33243b3b1ea2fb19c509c92').format(date)
     
     columns = ['source','author','title','description','url','publishedAt','content']
@@ -63,13 +58,17 @@ def top_news():
 
 def specific_news():
     
-    target_media = ['cnn','nbc-news','fox-news','politico']
+    tz = pytz.timezone('America/New_York')
+    date = datetime.datetime.now(tz).strftime('%Y-%m-%d')
+    target_media = ['cnn']
     columns = ['source','author','title','description','url','publishedAt','content']
     data = {'source':[],'author':[],'title':[],'description':[],'url':[],'publishedAt':[],'content':[]}
     for media in target_media:
         url = ('http://newsapi.org/v2/top-headlines?'
+               'category＝business&'
                'sources={}&'
-               'apiKey=18bcaa50d33243b3b1ea2fb19c509c92').format(media)
+               'from={}&'
+               'apiKey=18bcaa50d33243b3b1ea2fb19c509c92').format(media,date)
        
         response = requests.get(url)
         r = response.json()
@@ -127,14 +126,14 @@ def main():
     
     ''' 
     titles = top_news()
-   
+    
     
     return titles
 
 
 if __name__=="__main__":
     
-    #titles = main()
+    titles = main()
     print("News scrapping testing")
 
 

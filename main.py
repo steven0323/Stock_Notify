@@ -1,12 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jun 16 11:38:31 2020
-@author: steven_tseng
-@Project: Line official account notify 
-@Last modify : 2020 / 06 / 18
-
-"""
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -215,11 +206,11 @@ def get_news():
     for title in titles:
         print("US Top News: "+title)
         print()
-        title = translator.translate(title,dest='zh-tw').text
-        #msg = "美國即時新聞\r\n"+title
+        #title = translator.translate(title,dest='zh-tw').text
+        #msg = " \r\n"+title
         #lineNotifyMessage(token,msg)
-        time.sleep(1.5)
-        
+        time.sleep(2.5)
+        #print("===============================================")   
           
 
 '''
@@ -239,7 +230,7 @@ if __name__=="__main__":
         day = x.strftime("%a")
         if day == "Mon" or day =="Tue" or day == "Wed" or day =="Thu" or day =="Fri" or day=="Sat":
             get_news()
-            time.sleep(1800)
+            time.sleep(3600)
         else:
             pass
     

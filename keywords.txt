@@ -7,4 +7,4 @@ Kim Jong-un,5
 Coronavirus,5
 Covid-19,5
 Recession,6
-War,6
+Breaking news,5
